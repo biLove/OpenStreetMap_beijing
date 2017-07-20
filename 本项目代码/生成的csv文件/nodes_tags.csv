@@ -7278,7 +7278,6 @@ id,key,value,type
 4000038419,name,民生银行,regular
 4000038419,amenity,bank,regular
 4014544866,housenumber,50,addr
-4014544866,postcode,10060,addr
 4014544866,street,光华路,addr
 4014544866,amenity,post_office,regular
 4014544866,description,International parcel facility,regular

@@ -1,6 +1,6 @@
 import xml.etree.cElementTree as ET
 
-filename = 'beijing_china.osm'
+filename = 'sample.osm'
 
 def is_post_code(elem):
     return (elem.attrib['k'] == 'addr:postcode')

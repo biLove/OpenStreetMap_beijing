@@ -19731,6 +19731,7 @@ id,key,value,type
 365805929,city,Beijing,addr
 365805929,emergency,yes,regular
 365805929,street,安定路,addr
+365805929,emergency_shelter,yes,regular
 365805929,应急避难场所,yes,regular
 365805929,应急避难人数（万人）,0.56,regular
 365807244,area,"88,000 square meters",regular

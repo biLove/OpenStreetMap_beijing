@@ -66,13 +66,27 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
                 temp_tag['key'] = ':'.join(temp[1:])
                 temp_tag['id'] = int(element.attrib['id'])
                 temp_tag['value'] = child.attrib['v']
-                tags.append(temp_tag)
+                if temp_tag['key'] == 'postcode':
+                    if len(temp_tag['value']) == 6:
+                        tags.append(temp_tag)
+                else:
+                    tags.append(temp_tag)
             elif PROBLEMCHARS.search(key) is  None:
                 temp_tag['type'] = 'regular'
                 temp_tag['key'] = child.attrib['k']
                 temp_tag['id'] = int(element.attrib['id'])
                 temp_tag['value'] = child.attrib['v']
                 tags.append(temp_tag)
+            elif PROBLEMCHARS.search(key) is not None:
+                temp = key.replace(' ', '_')
+                print 'old value' + key   #打印出原来的类型
+                print 'This:  ' + temp    #打印出代替后的类型
+                if PROBLEMCHARS.search(temp) is None:   #如果用代替后没有特殊字符了，就将代替后的数据存入csv文件中
+                    temp_tag['type'] = 'regular'
+                    temp_tag['key'] = temp
+                    temp_tag['id'] = int(element.attrib['id'])
+                    temp_tag['value'] = child.attrib['v']
+                    tags.append(temp_tag)
         #print tags
 
     if element.tag == "way":
@@ -94,13 +108,26 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
                 temp_tag['key'] = ':'.join(temp[1:])
                 temp_tag['id'] = int(element.attrib['id'])
                 temp_tag['value'] = child.attrib['v']
-                tags.append(temp_tag)
+                if temp_tag['key'] == 'postcode':
+                    if len(temp_tag['value']) == 6:
+                        tags.append(temp_tag)
+                else:
+                    tags.append(temp_tag)
             elif PROBLEMCHARS.search(key) is None:
                 temp_tag['type'] = 'regular'
-                temp_tag['key'] = child.attrib['k']
+                temp_tag['key'] = key
                 temp_tag['id'] = int(element.attrib['id'])
                 temp_tag['value'] = child.attrib['v']
                 tags.append(temp_tag)
+            elif PROBLEMCHARS.search(key) is not None:
+                temp = key.replace(' ','_')
+                print 'This:  ' + temp
+                if PROBLEMCHARS.search(temp) is None:
+                    temp_tag['type'] = 'regular'
+                    temp_tag['key'] = temp
+                    temp_tag['id'] = int(element.attrib['id'])
+                    temp_tag['value'] = child.attrib['v']
+                    tags.append(temp_tag)
 
         for child in element.iter('nd'):
             node_tag = {'id': int(element.attrib['id']), 'node_id': child.attrib['ref'], 'position': len(way_nodes)}

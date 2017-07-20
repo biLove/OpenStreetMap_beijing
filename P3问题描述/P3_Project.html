@@ -433,6 +433,29 @@ print k_attrib_new
 <pre><code>emergency_shelter
 </code></pre>
 
+<p>将修正后的标签存储到数据中，这部分将在 data.py 文件中进行修改，方便将修改后的文件直接存入csv文件中。<strong>由于特殊字符种类较多，本项目中，只出现了空格的情况，故处理中，只对空格进行修改，其他特殊字符暂不处理</strong>。<br/>
+修改代码如下：</p>
+
+<pre><code class="language-python"># 判断如果标签中有特殊字符，则先将空格用短横线代替，
+# 再次进行判断，如果用代替后没有特殊字符了，就将代替后的数据存入csv文件中，如果还有特殊字符，则不用再处理。
+elif PROBLEMCHARS.search(key) is not None:
+    temp = key.replace(&#39; &#39;, &#39;_&#39;)
+    print &#39;This:  &#39; + temp   #打印出代替后的类型
+    if PROBLEMCHARS.search(temp) is None:   #如果用代替后没有特殊字符了，就将代替后的数据存入csv文件中
+        temp_tag[&#39;type&#39;] = &#39;regular&#39;
+        temp_tag[&#39;key&#39;] = temp
+        temp_tag[&#39;id&#39;] = int(element.attrib[&#39;id&#39;])
+        temp_tag[&#39;value&#39;] = child.attrib[&#39;v&#39;]
+        tags.append(temp_tag)
+</code></pre>
+
+<p>查看打印结果可得到：</p>
+
+<pre><code class="language-shell">This:  emergency_shelter
+</code></pre>
+
+<p>查看生成的csv文件，可以在 ways_tags.csv文件中找到 <code>key</code>值为<code>emergency_shelter</code> 的值，说明修正完成。</p>
+
 <h3 id="toc_9">3. 审查邮政编码是否准确</h3>
 
 <p>使用 <code>post_code.py</code> 来打印本文中的邮政编码，代码如下：</p>
@@ -463,6 +486,23 @@ for event, elem in ET.iterparse(filename, events=(&quot;start&quot;,)):
 </code></pre>
 
 <p>从以上结果中可以看出，部分邮编出现了4位，5位，或者电话号码，均为异常邮编，在写入数据库的时候，应该放弃这些异常值。</p>
+
+<p>在 data.py 文件中对邮编进行修改如下，只保留6位数的邮编，其他的邮编放弃。</p>
+
+<pre><code class="language-python">if LOWER_COLON.match(key) is not None:
+    temp = key.split(&#39;:&#39;)
+    temp_tag[&#39;type&#39;] = temp[0]
+    temp_tag[&#39;key&#39;] = &#39;:&#39;.join(temp[1:])
+    temp_tag[&#39;id&#39;] = int(element.attrib[&#39;id&#39;])
+    temp_tag[&#39;value&#39;] = child.attrib[&#39;v&#39;]
+    if temp_tag[&#39;key&#39;] == &#39;postcode&#39;:   #当key值为postcode时，判断postcode的位数，满足6位，就加入到tags里面
+        if len(temp_tag[&#39;value&#39;]) == 6:
+            tags.append(temp_tag)
+    else:   #当key值不为postcode时，直接加入tags里面
+        tags.append(temp_tag)
+</code></pre>
+
+<p>通过上述代码，可以有效的保留邮编为6位的值，去掉不正确的邮编</p>
 
 <h2 id="toc_10">将数据写入csv文件</h2>
 
@@ -639,9 +679,25 @@ shop|149
 
 <h2 id="toc_23">关于数据集的其他想法</h2>
 
-<p>对于非英语国家，在地址描述上会显得比较杂乱，可以设置约束，某些字段要求用英文来描述，在增加本国语言描述的字段，方便使用。</p>
+<h4 id="toc_24">额外建议</h4>
 
-<p>好处：有统一的约束条件之后，可以让不同用户编辑的时候，有统一的标准，避免每个用户都按照自己的标准来编辑，导致最终清理时，出现不统一的情况。</p>
+<p>对于非英语国家，在地址描述上会显得比较杂乱，可以设置约束，地址描述的字段要求本国语言描述，在此字段中，不要出现英文描述或者其他描述方式。<br/>
+同时增加英文描述的字段，方便将信息记录的更加完善。</p>
+
+<h4 id="toc_25">实施的益处</h4>
+
+<ol>
+<li>使用本国语言描述，并规定此字段中不可出现其他语言或其他形式的描述，可使地图地址描述更加规范化，使用时也不会出现误差，例如 ‘qiushanlu’ 是指的 ‘秋山路’ 还是 ‘球山路’呢？如果直接用中文描述，就不会出现这种误差；</li>
+<li>增加英文描述的字段，可帮助不懂本国语言的人来识别地图，当然，此字段并非必须，有最好；</li>
+</ol>
+
+<h4 id="toc_26">引起的问题</h4>
+
+<ol>
+<li>用户在编辑地图时，需要多编辑一个字段，会加大用户编辑的难度；且要求平台对用户编辑的内容进行校验，是否符合规则。如果校验不仔细，可能达不到预期的目标；</li>
+</ol>
+
+<p>综合实施的益处和引起的问题，此改动还是有意义的，能从数据来源就优化地址描述的问题，避免后期因为描述不统一的问题，产生其他的影响，例如地址描述有歧义等。</p>
 
 </div></body>
 
