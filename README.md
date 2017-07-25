@@ -20,7 +20,7 @@
 
 该项目要做的事情如下：
 
-1. 选择地图区域，本项目是从https://www.openstreetmap.org中选择的北京地区的数据，下载一个 XML OSM 数据集；
+1. 选择地图区域，本项目是从https://www.openstreetmap.org 中选择的北京地区的数据，下载一个 XML OSM 数据集；
 2. 处理数据集，将数据集从XML格式转换为 CSV 格式，并将清理后的 .csv 文档导入到 SQL 数据集中；
 3. 探索数据库
 
