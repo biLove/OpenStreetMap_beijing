@@ -1,6 +1,7 @@
 # 项目简介
 
-在 https://www.openstreetmap.org 选择任意区域，然后使用python对数据加工（比如针对有效性、准确性、完整性、一致性和均匀性评估数据质量），并使用SQL将数据写入数据库。  
+在  https://www.openstreetmap.org  
+选择任意区域，然后使用python对数据加工（比如针对有效性、准确性、完整性、一致性和均匀性评估数据质量），并使用SQL将数据写入数据库。  
 
 # 项目相关内容
 
@@ -19,7 +20,7 @@
 
 该项目要做的事情如下：
 
-1. 选择地图区域，本项目是从https://www.openstreetmap.org中选择的北京地区的数据，下载一个 XML OSM 数据集；
+1. 选择地图区域，本项目是从https://www.openstreetmap.org 中选择的北京地区的数据，下载一个 XML OSM 数据集；
 2. 处理数据集，将数据集从XML格式转换为 CSV 格式，并将清理后的 .csv 文档导入到 SQL 数据集中；
 3. 探索数据库
 
