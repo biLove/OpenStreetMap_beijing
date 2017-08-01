@@ -24,4 +24,6 @@
 2. 处理数据集，将数据集从XML格式转换为 CSV 格式，并将清理后的 .csv 文档导入到 SQL 数据集中；
 3. 探索数据库
 
+# 查看本项目效果
 
+http://lilyalove.com/OpenStreetMap_beijing/detail/p3.html
